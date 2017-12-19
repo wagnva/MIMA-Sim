@@ -39,7 +39,7 @@ $(function(){
             // line by line
 
             for(var line = 0; line < lines.length; line++){
-                printCommand(lines[line]);
+                printCommand(lines[line], line);
 
                 //if the line isn't empty
                 if(lines[line] !== ""){
@@ -133,8 +133,8 @@ $(function(){
         console.log(msg);
     }
     //print for command
-    function printCommand(msg){
-        console.log("%c"+msg,"color: #3f3f3f");
+    function printCommand(msg, line){
+        console.log("%c"+msg + " %c(" + line + ")", "color: #3f3f3f", "color: blue");
     }
     //print for status
     function printStatus(msg){
@@ -227,8 +227,8 @@ $(function(){
         },
         add: function(line, argument){
             checkStorage(line, argument);
-            akku = addBinary(akku, storage[argument]);
             printStatus("[ADD] " + akku + " (akku) + " + storage[argument] + " (storage)");
+            akku = addBinary(akku, storage[argument]);
             printStatus("[Akku] " + akku);
         },
         ldiv: function(line, argument){
