@@ -171,10 +171,6 @@ $(function(){
     function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
     function or(a, b){return (a || b);}
     function addBinary(a, b){
-        var zero = "000000000000000000000000";
-        if(a === zero){print("is zero"); return a;}
-        if(b === zero){print("is zero"); return b;}
-
         var sum = '';
         var carry = '';
 
