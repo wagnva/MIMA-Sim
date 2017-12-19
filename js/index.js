@@ -228,6 +228,7 @@ $(function(){
         add: function(line, argument){
             checkStorage(line, argument);
             akku = addBinary(akku, storage[argument]);
+            printStatus("[ADD] " + akku + " (akku) + " + storage[argument] + " (storage)");
             printStatus("[Akku] " + akku);
         },
         ldiv: function(line, argument){
