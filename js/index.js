@@ -1,6 +1,6 @@
 $(function(){
 
-    var akku = "111111111111111111111100";
+    var akku = "0";
     var storage = {};
     var jumpStorage = {};
 
@@ -14,6 +14,10 @@ $(function(){
 
         //clear the console to make sure only the newest execution is shown
         console.clear();
+
+        akku = 0;
+        storage = {};
+        jumpStorage = {};
 
         var file = $("#code-file").prop("files")[0];
 
@@ -98,11 +102,14 @@ $(function(){
     }
 
     function throwError(line, msg){
-        console.error("Error at line: " + (line+1) + "  because of: " + msg);
+        console.error("Error at line: " + line + "  because of: " + msg);
         printCompleteStatus();
     }
 
     function parseArgument(argument){
+        argument = argument.replace("\n", "");
+        argument = argument.replace(" ", "");
+        argument = argument.replace("\r", ""); //remove all unnecessary characters at the end
         //fill up the arguments to make them twenty bits long
         return makeBit(argument, 20);
     }
@@ -112,7 +119,7 @@ $(function(){
         if(argument.length < length){
             var temp = "";
             for(var i = 0; i < (length - argument.length); i++){
-                temp += "0"; //prepend a zero
+                temp = "0" + temp; //prepend a zero
             }
             argument = temp + argument;
         }
@@ -148,14 +155,13 @@ $(function(){
     }
 
     /* src: https://stackoverflow.com/questions/40353000/adding-two-binary-and-returning-binary-in-javascript */
-
     function halfAdder(a, b){
         const sum = xor(a,b);
         const carry = and(a,b);
         return [sum, carry];
     }
     function fullAdder(a, b, carry){
-        halfAdd = halfAdder(a,b);
+        var halfAdd = halfAdder(a,b);
         const sum = xor(carry, halfAdd[0]);
         carry = and(carry, halfAdd[0]);
         carry = or(carry, halfAdd[1]);
@@ -165,6 +171,9 @@ $(function(){
     function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
     function or(a, b){return (a || b);}
     function addBinary(a, b){
+        var zero = "000000000000000000000000";
+        if(a === zero){print("is zero"); return a;}
+        if(b === zero){print("is zero"); return b;}
 
         var sum = '';
         var carry = '';
@@ -246,7 +255,7 @@ $(function(){
         add: function(line, argument){
             checkStorage(line, argument);
             printStatus("[ADD] " + akku + " (akku) + " + storage[argument] + " (storage)");
-            akku = makeBit(addBinary(akku, storage[argument]), 24);
+            akku = addBinary(storage[argument], akku);
             printStatus("[Akku] " + akku);
         },
         ldiv: function(line, argument){
@@ -288,6 +297,9 @@ $(function(){
         eql: function(line, argument){
             checkStorage(line, argument);
             var compareTo = storage[argument];
+
+            print(compareTo.length);
+            print(akku.length);
 
             if(binaryEqual(akku, compareTo)){
                 printStatus("[EQL] are equal");
