@@ -147,27 +147,47 @@ $(function(){
         }
     }
 
-    //add two binary numbers together
-    //src: https://stackoverflow.com/questions/40353000/adding-two-binary-and-returning-binary-in-javascript
-    function addBinary(a, b) {
-        var i = a.length - 1;
-        var j = b.length - 1;
-        var carry = 0;
-        var result = "";
-        while(i >= 0 || j >= 0) {
-            var m = i < 0 ? 0 : a[i] | 0;
-            var n = j < 0 ? 0 : b[j] | 0;
-            carry += m + n; // sum of two digits
-            result = carry % 2 + result; // string concat
-            carry = carry / 2 | 0; // remove decimals,  1 / 2 = 0.5, only get 0
-            i--;
-            j--;
-        }
-        if(carry !== 0) {
-            result = carry + result;
-        }
-        return result;
+    /* src: https://stackoverflow.com/questions/40353000/adding-two-binary-and-returning-binary-in-javascript */
+    function halfAdder(a, b){
+        const sum = xor(a,b);
+        const carry = and(a,b);
+        return [sum, carry];
     }
+
+    function fullAdder(a, b, carry){
+        halfAdd = halfAdder(a,b);
+        const sum = xor(carry, halfAdd[0]);
+        carry = and(carry, halfAdd[0]);
+        carry = or(carry, halfAdd[1]);
+        return [sum, carry];
+    }
+
+    function xor(a, b){return (a === b ? 0 : 1);}
+    function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
+    function or(a, b){return (a || b);}
+
+    function addBinary(a, b){
+
+        let sum = '';
+        let carry = '';
+
+        for(var i = a.length-1;i>=0; i--){
+            if(i === a.length-1){
+                //half add the first pair
+                const halfAdd1 = halfAdder(a[i],b[i]);
+                sum = halfAdd1[0]+sum;
+                carry = halfAdd1[1];
+            }else{
+                //full add the rest
+                const fullAdd = fullAdder(a[i],b[i],carry);
+                sum = fullAdd[0]+sum;
+                carry = fullAdd[1];
+            }
+        }
+
+        return carry ? carry + sum : sum;
+    }
+    /* end src: https://stackoverflow.com/questions/40353000/adding-two-binary-and-returning-binary-in-javascript */
 
     function binaryEqual(a, b){
         //compare the two binaries digit by digit
