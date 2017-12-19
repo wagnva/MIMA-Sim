@@ -10,6 +10,8 @@ $(function(){
     //when execute is clicked
     $("#execute").on("click", function(e){
 
+        e.preventDefault();
+
         //clear the console to make sure only the newest execution is shown
         console.clear();
 
@@ -96,7 +98,7 @@ $(function(){
     }
 
     function throwError(line, msg){
-        console.error("Error at line: " + line + "  because of: " + msg);
+        console.error("Error at line: " + (line+1) + "  because of: " + msg);
         printCompleteStatus();
     }
 
