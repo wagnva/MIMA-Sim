@@ -148,12 +148,12 @@ $(function(){
     }
 
     /* src: https://stackoverflow.com/questions/40353000/adding-two-binary-and-returning-binary-in-javascript */
+
     function halfAdder(a, b){
         const sum = xor(a,b);
         const carry = and(a,b);
         return [sum, carry];
     }
-
     function fullAdder(a, b, carry){
         halfAdd = halfAdder(a,b);
         const sum = xor(carry, halfAdd[0]);
@@ -161,18 +161,16 @@ $(function(){
         carry = or(carry, halfAdd[1]);
         return [sum, carry];
     }
-
     function xor(a, b){return (a === b ? 0 : 1);}
     function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
     function or(a, b){return (a || b);}
-
     function addBinary(a, b){
 
-        let sum = '';
-        let carry = '';
+        var sum = '';
+        var carry = '';
 
         for(var i = a.length-1;i>=0; i--){
-            if(i === a.length-1){
+            if(i == a.length-1){
                 //half add the first pair
                 const halfAdd1 = halfAdder(a[i],b[i]);
                 sum = halfAdd1[0]+sum;
@@ -248,7 +246,7 @@ $(function(){
         add: function(line, argument){
             checkStorage(line, argument);
             printStatus("[ADD] " + akku + " (akku) + " + storage[argument] + " (storage)");
-            akku = addBinary(akku, storage[argument]);
+            akku = makeBit(addBinary(akku, storage[argument]), 24);
             printStatus("[Akku] " + akku);
         },
         ldiv: function(line, argument){
